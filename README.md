@@ -8,6 +8,10 @@ A simple CLI tool to set up a new React project with Vite and Tailwind CSS in on
 - Initializes a new React project with Vite.
 - Configures Tailwind CSS with PostCSS and Autoprefixer.
 - Automatically sets up Tailwind CSS configuration files.
+- Options to choose between npm and pnpm.
+- Optionally initialize a Git repository and create .gitignore.
+- Optionally set up ESLint and Prettier.
+- Optionally install axios, react-router-dom, redux, @reduxjs/toolkit, husky, Jest, and dotenv.
 
 ## Prerequisites
 
@@ -19,7 +23,7 @@ A simple CLI tool to set up a new React project with Vite and Tailwind CSS in on
 First, install the CLI tool globally:
 
 ```bash
-npm install -g vite-tailwind-react-Cli
+npm install -g vite-tailwind-react-cli
 ```
 
 ## Usage
@@ -95,6 +99,3 @@ This project is licensed under the MIT License.
 - [React](https://reactjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Execa](https://github.com/sindresorhus/execa)
-
-# vite-react-tailwind-cli
-# vite-react-tailwind-cli
