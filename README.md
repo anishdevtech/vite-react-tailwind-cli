@@ -99,3 +99,5 @@ This project is licensed under the MIT License.
 - [React](https://reactjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Execa](https://github.com/sindresorhus/execa)
+## Developer 
+- Anish
