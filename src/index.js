@@ -1,6 +1,8 @@
 #!/usr/bin/env node
-// hiiii 
-import readline from  "readline";
+import readline from 'readline';
+import chalk from 'chalk';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -9,9 +11,10 @@ const rl = readline.createInterface({
 
 const askQuestion = (query) => new Promise((resolve) => rl.question(query, resolve));
 
+const log = (message, color = 'white') => console.log(chalk[color](message));
+
 (async () => {
   const execa = (await import('execa')).execa;
-  const path = (await import('path')).default;
 
   try {
     const packageManager = (await askQuestion('Do you prefer npm or pnpm? (default: npm) ')).trim() || 'npm';
@@ -28,118 +31,117 @@ const askQuestion = (query) => new Promise((resolve) => rl.question(query, resol
     const projectName = process.argv[2] || 'my-react-app';
     const projectPath = path.resolve(process.cwd(), projectName);
 
-    console.log(`Creating Vite project in ${projectPath}...`);
+    log(`Creating Vite project in ${projectPath}...`, 'cyan');
     await execa(packageManager, ['create', 'vite@latest', projectName, '--', '--template', 'react'], { stdio: 'inherit' });
 
     process.chdir(projectPath);
 
-    console.log('Installing Tailwind CSS and dependencies...');
+    log('Installing Tailwind CSS and dependencies...', 'cyan');
     await execa(packageManager, ['install', '-D', 'tailwindcss', 'postcss', 'autoprefixer'], { stdio: 'inherit' });
 
-    console.log('Initializing Tailwind CSS...');
+    log('Initializing Tailwind CSS...', 'cyan');
     await execa('npx', ['tailwindcss', 'init', '-p'], { stdio: 'inherit' });
 
-    console.log('Configuring Tailwind CSS...');
-    const fs = (await import('fs')).promises;
+    log('Configuring Tailwind CSS...', 'cyan');
     const tailwindConfig = `/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-`;
+    module.exports = {
+      content: [
+        './index.html',
+        './src/**/*.{js,ts,jsx,tsx}',
+      ],
+      theme: {
+        extend: {},
+      },
+      plugins: [],
+    };
+    `;
     await fs.writeFile(path.join(projectPath, 'tailwind.config.js'), tailwindConfig);
 
     const indexCSS = `@tailwind base;
-@tailwind components;
-@tailwind utilities;
-`;
+    @tailwind components;
+    @tailwind utilities;
+    `;
     await fs.writeFile(path.join(projectPath, 'src', 'index.css'), indexCSS);
 
     if (useGit === 'y') {
-      console.log('Initializing Git repository...');
+      log('Initializing Git repository...', 'cyan');
       await execa('git', ['init'], { stdio: 'inherit' });
 
-      console.log('Creating .gitignore...');
+      log('Creating .gitignore...', 'cyan');
       const gitignore = `node_modules
-dist
-.env
-`;
+      dist
+      .env
+      `;
       await fs.writeFile(path.join(projectPath, '.gitignore'), gitignore);
     }
 
     if (setupESLint === 'y') {
-      console.log('Setting up ESLint...');
+      log('Setting up ESLint...', 'cyan');
       await execa(packageManager, ['install', '-D', 'eslint'], { stdio: 'inherit' });
       await execa('npx', ['eslint', '--init'], { stdio: 'inherit' });
     }
 
     if (setupPrettier === 'y') {
-      console.log('Setting up Prettier...');
+      log('Setting up Prettier...', 'cyan');
       await execa(packageManager, ['install', '-D', 'prettier'], { stdio: 'inherit' });
       const prettierConfig = `{
-  "semi": false,
-  "singleQuote": true
-}
-`;
+        "semi": false,
+        "singleQuote": true
+      }
+      `;
       await fs.writeFile(path.join(projectPath, '.prettierrc'), prettierConfig);
     }
 
     if (setupAxios === 'y') {
-      console.log('Installing axios...');
+      log('Installing axios...', 'cyan');
       await execa(packageManager, ['install', 'axios'], { stdio: 'inherit' });
     }
 
     if (setupRouter === 'y') {
-      console.log('Installing react-router-dom...');
+      log('Installing react-router-dom...', 'cyan');
       await execa(packageManager, ['install', 'react-router-dom'], { stdio: 'inherit' });
     }
 
     if (setupHusky === 'y') {
-      console.log('Setting up husky for Git hooks...');
+      log('Setting up husky for Git hooks...', 'cyan');
       await execa(packageManager, ['install', 'husky', '-D'], { stdio: 'inherit' });
       await execa('npx', ['husky', 'init'], { stdio: 'inherit' });
       const lintStagedConfig = `{
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --fix"
-  }
-}
-`;
+        "lint-staged": {
+          "*.{js,jsx,ts,tsx}": "eslint --fix"
+        }
+      }
+      `;
       await fs.writeFile(path.join(projectPath, 'package.json'), lintStagedConfig, { flag: 'a' });
     }
 
     if (setupRedux === 'y') {
-      console.log('Installing redux and @reduxjs/toolkit...');
+      log('Installing redux and @reduxjs/toolkit...', 'cyan');
       await execa(packageManager, ['install', '@reduxjs/toolkit', 'react-redux'], { stdio: 'inherit' });
     }
 
     if (setupJest === 'y') {
-      console.log('Setting up Jest for testing...');
+      log('Setting up Jest for testing...', 'cyan');
       await execa(packageManager, ['install', '-D', 'jest', 'babel-jest', '@testing-library/react', '@testing-library/jest-dom'], { stdio: 'inherit' });
       const jestConfig = `{
-  "testEnvironment": "jsdom"
-}
-`;
+        "testEnvironment": "jsdom"
+      }
+      `;
       await fs.writeFile(path.join(projectPath, 'jest.config.js'), jestConfig);
     }
 
     if (setupDotenv === 'y') {
-      console.log('Setting up dotenv...');
+      log('Setting up dotenv...', 'cyan');
       await execa(packageManager, ['install', 'dotenv'], { stdio: 'inherit' });
       const dotenvConfig = `NODE_ENV=development
-API_URL=http://localhost:3000
-`;
+      API_URL=http://localhost:3000
+      `;
       await fs.writeFile(path.join(projectPath, '.env'), dotenvConfig);
     }
 
-    console.log('Project setup complete.');
+    log('Project setup complete.', 'green');
   } catch (error) {
-    console.error('Error setting up project:', error);
+    log(`Error setting up project: ${error.message}`, 'red');
   } finally {
     rl.close();
   }
