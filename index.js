@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const readline = require('readline');
+import readline from  "readline";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -103,8 +103,7 @@ dist
     if (setupHusky === 'y') {
       console.log('Setting up husky for Git hooks...');
       await execa(packageManager, ['install', 'husky', '-D'], { stdio: 'inherit' });
-      await execa('npx', ['husky', 'install'], { stdio: 'inherit' });
-      await execa('npx', ['husky', 'add', '.husky/pre-commit', 'npm run lint'], { stdio: 'inherit' });
+      await execa('npx', ['husky', 'init'], { stdio: 'inherit' });
       const lintStagedConfig = `{
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --fix"

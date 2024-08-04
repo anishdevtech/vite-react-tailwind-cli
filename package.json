@@ -1,6 +1,6 @@
 {
   "name": "vite-tailwind-react-cli",
-  "version": "1.1.1",
+  "version": "1.2.3",
   "description": "CLI tool to setup React, Vite, and Tailwind CSS",
   "main": "index.js",
   "type": "module",
@@ -8,7 +8,7 @@
     "create-vtr": "index.js"
   },
   "dependencies": {
-    "execa": "^9.3.1"
+    "execa": "^9.3.0"
   },
   "author": "anish2dev",
   "license": "ISC",
@@ -21,6 +21,9 @@
     "url": "git+https://github.com/anishdevtech/vite-react-tailwind-cli.git"
   },
   "keywords": [
+    "react",
+    "tailwind",
+    "routes",
     "vite"
   ],
   "bugs": {
