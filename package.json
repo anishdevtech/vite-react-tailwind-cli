@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "create-vtr": "index.js"
+    "create-vtr": "src/index.js"
   },
   "dependencies": {
     "execa": "^9.3.0"
