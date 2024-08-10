@@ -103,17 +103,21 @@ const log = (message, color = 'white') => console.log(chalk[color](message));
     }
 
     if (setupHusky === 'y') {
-      log('Setting up husky for Git hooks...', 'cyan');
-      await execa(packageManager, ['install', 'husky', '-D'], { stdio: 'inherit' });
-      await execa('npx', ['husky', 'init'], { stdio: 'inherit' });
-      const lintStagedConfig = `{
-        "lint-staged": {
-          "*.{js,jsx,ts,tsx}": "eslint --fix"
-        }
-      }
-      `;
-      await fs.writeFile(path.join(projectPath, 'package.json'), lintStagedConfig, { flag: 'a' });
-    }
+  log('Setting up husky for Git hooks...', 'cyan');
+  await execa(packageManager, ['install', 'husky', '-D'], { stdio: 'inherit' });
+  await execa('npx', ['husky', 'init'], { stdio: 'inherit' });
+
+  log('Configuring lint-staged...', 'cyan');
+  const packageJsonPath = path.join(projectPath, 'package.json');
+  const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
+
+  packageJson['lint-staged'] = {
+    "*.{js,jsx,ts,tsx}": "eslint --fix"
+  };
+
+  await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf8');
+}
+
 
     if (setupRedux === 'y') {
       log('Installing redux and @reduxjs/toolkit...', 'cyan');
